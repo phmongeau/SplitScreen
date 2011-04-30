@@ -7,7 +7,7 @@ package
 		override public function create():void
 		{
 			var t:FlxText;
-			t = new FlxText(0,FlxG.height/2-20,FlxG.width,"Features Template");
+			t = new FlxText(0,FlxG.height/2-20,FlxG.width,"Split Screen Demo");
 			t.size = 32;
 			t.alignment = "center";
 			add(t);
