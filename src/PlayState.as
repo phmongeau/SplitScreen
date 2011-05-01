@@ -7,15 +7,13 @@ package
 		private var level:FlxTilemap;
 		private var player1:FlxSprite;
 		private var player2:FlxSprite;
-
-		//[Embed(source="border.png")] protected var ImgBorder:Class;
 		
 		override public function create():void
 		{
 			FlxG.framerate = 50;
 			FlxG.flashFramerate = 50;
 
-			FlxG.mouse.hide();
+			// set the background color to white
 			FlxG.bgColor = 0xffffffff;
 			
 			//Setup the level (40 x 40 tiles) Addapted from Adam Atomic's EZPlatformer
@@ -61,45 +59,49 @@ package
 				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 				1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 );
 
-			// Create the tilemap
+			// Create the tilemap from the levelData we just created
 			level = new FlxTilemap();
 			level.loadMap(FlxTilemap.arrayToCSV(levelData, 40), FlxTilemap.ImgAuto,0,0,FlxTilemap.AUTO);
 			add(level);
 
-			//Add the players (code taken from EZPlatformer)
-			
-			player1 = new FlxSprite(65, 200).makeGraphic(10,12, 0xFFFF0000);
-			player1.maxVelocity.x = 80;
-			player1.maxVelocity.y = 200;
-			player1.acceleration.y = 200;
+			//Create the two players
+			player1 = new FlxSprite(65, 200).makeGraphic(10,12, 0xFFFF0000); //player 1 is red and starts at 65, 200
+			player1.maxVelocity.x = 80;   // Theses are pysics settings,
+			player1.maxVelocity.y = 200;  // controling how the players behave
+			player1.acceleration.y = 200; // in the game
 			player1.drag.x = player1.maxVelocity.x*4;
 			add(player1);
 
-			player2 = new FlxSprite(265, 200).makeGraphic(10,12, 0xFF0000FF);
-			player2.maxVelocity.x = 80;
+			player2 = new FlxSprite(265, 200).makeGraphic(10,12, 0xFF0000FF); // player2 is blue and starts at 265, 200
+			player2.maxVelocity.x = 80; // Same thing than player 1
 			player2.maxVelocity.y = 200;
 			player2.acceleration.y = 200;
 			player2.drag.x = player2.maxVelocity.x*4;
 			add(player2);
 
 
-			// Then we setup two cameras
+			// Then we setup two cameras to follow each of the two players
 
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/2, FlxG.height);
+			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/2, FlxG.height); // we put the first one in the top left corner
 			cam.follow(player2);
+			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,level.width, level.height);
 			FlxG.addCamera(cam);
 
-			cam = new FlxCamera(FlxG.width/2,0, FlxG.width/2, FlxG.height);
+			// Almost the same thing as the first camera
+			cam = new FlxCamera(FlxG.width/2,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
 			cam.follow(player1);
 			cam.setBounds(0,0,level.width, level.height);
 			FlxG.addCamera(cam);
 
-			//add a border
-			/*var border:FlxSprite = new FlxSprite().loadGraphic(ImgBorder);
-			border.scrollFactor = new FlxPoint(0,0); //short way to set the scroll factor to 0
-			add(border);*/
-
+			// add quit button
+			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
+			add(quitBtn);
+			
+			// Create a camera focused on the button
+			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+			cam.follow(quitBtn);
+			FlxG.addCamera(cam);
 		}
 		
 		override public function update():void
@@ -107,8 +109,9 @@ package
 			// collide everything
 			FlxG.collide();
 
-			//player 1 movement
+			//player 1 controls
 			player1.acceleration.x = 0;
+
 			if(FlxG.keys.LEFT)
 				player1.acceleration.x = -player1.maxVelocity.x*4;
 			if(FlxG.keys.RIGHT)
@@ -116,8 +119,9 @@ package
 			if(FlxG.keys.justPressed("UP") && player1.isTouching(FlxObject.FLOOR))
 				player1.velocity.y -= player1.maxVelocity.y/1.5;
 
-			//player 2 movement
+			//player 2 controls
 			player2.acceleration.x = 0;
+
 			if(FlxG.keys.A)
 				player2.acceleration.x = -player2.maxVelocity.x*4;
 			if(FlxG.keys.D)
@@ -127,6 +131,13 @@ package
 
 			super.update();
 			
+		}
+
+		// function called when the quit button is pressed
+		private function onQuit():void
+		{
+			// Go back to the MenuState
+			FlxG.switchState(new MenuState);
 		}
 	}
 }
