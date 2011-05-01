@@ -86,12 +86,14 @@ package
 			cam.follow(player2);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
 			cam.setBounds(0,0,level.width, level.height);
+			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
 			FlxG.addCamera(cam);
 
 			// Almost the same thing as the first camera
 			cam = new FlxCamera(FlxG.width/2,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
 			cam.follow(player1);
 			cam.setBounds(0,0,level.width, level.height);
+			cam.color = 0xCCCCFF; // Add a light blue tint to the camera
 			FlxG.addCamera(cam);
 
 			// add quit button
