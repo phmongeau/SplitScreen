@@ -7,6 +7,9 @@ package
 		private var level:FlxTilemap;
 		private var player1:FlxSprite;
 		private var player2:FlxSprite;
+
+		private var cam1:FlxCamera;
+		private var cam2:FlxCamera;
 		
 		override public function create():void
 		{
@@ -82,28 +85,41 @@ package
 
 			// Then we setup two cameras to follow each of the two players
 
-			var cam:FlxCamera = new FlxCamera(0,0, FlxG.width/2, FlxG.height); // we put the first one in the top left corner
-			cam.follow(player2);
+			cam1 = new FlxCamera(0,0, FlxG.width/2, FlxG.height); // we put the first one in the top left corner
+			cam1.follow(player2);
 			// this sets the limits of where the camera goes so that it doesn't show what's outside of the tilemap
-			cam.setBounds(0,0,level.width, level.height);
-			cam.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
-			FlxG.addCamera(cam);
+			cam1.setBounds(0,0,level.width, level.height);
+			cam1.color = 0xFFCCCC; // add a light red tint to the camera to differentiate it from the other
+			FlxG.addCamera(cam1);
 
 			// Almost the same thing as the first camera
-			cam = new FlxCamera(FlxG.width/2,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
-			cam.follow(player1);
-			cam.setBounds(0,0,level.width, level.height);
-			cam.color = 0xCCCCFF; // Add a light blue tint to the camera
-			FlxG.addCamera(cam);
+			cam2 = new FlxCamera(FlxG.width/2,0, FlxG.width/2, FlxG.height);    // and the second one in the top middle of the screen
+			cam2.follow(player1);
+			cam2.setBounds(0,0,level.width, level.height);
+			cam2.color = 0xCCCCFF; // Add a light blue tint to the camera
+			FlxG.addCamera(cam2);
 
 			// add quit button
 			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
 			add(quitBtn);
 			
 			// Create a camera focused on the button
-			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
+			var cam:FlxCamera = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 			cam.follow(quitBtn);
 			FlxG.addCamera(cam);
+
+			// Effects
+			var shakeBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Shake", onShake); // This button will shake cam1 when clicked
+			shakeBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
+			shakeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
+			shakeBtn.cameras = [cam1]; // Set it to only render on camera 1
+			add(shakeBtn);
+
+			var flashBtn:FlxButton = new FlxButton(100, FlxG.height-20, "Shake", onFlash); // This button will shake cam1 when clicked
+			flashBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
+			flashBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
+			flashBtn.cameras = [cam1]; // Set it to only render on camera 1
+			add(flashBtn);
 		}
 		
 		override public function update():void
@@ -140,6 +156,18 @@ package
 		{
 			// Go back to the MenuState
 			FlxG.switchState(new MenuState);
+		}
+
+		private function onShake():void
+		{
+			//Shake cam1
+			cam1.shake();
+		}
+
+		private function onFlash():void
+		{
+			//Shake cam1
+			cam2.flash();
 		}
 	}
 }
