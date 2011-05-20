@@ -100,7 +100,9 @@ package
 			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
 			add(quitBtn);
 			
-			// Create a camera focused on the button
+			// Create a camera focused on the quit button.
+			// We do this because we don't want the quit button to be
+			// tinted by the other cameras.
 			cam = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 			cam.follow(quitBtn);
 			FlxG.addCamera(cam);
