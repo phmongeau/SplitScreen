@@ -111,14 +111,14 @@ package
 			// Effects
 			var shakeBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Shake", onShake); // This button will shake cam1 when clicked
 			shakeBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
-			shakeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
+			//shakeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
 			shakeBtn.cameras = [cam1]; // Set it to only render on camera 1
 			add(shakeBtn);
 
-			var flashBtn:FlxButton = new FlxButton(100, FlxG.height-20, "Shake", onFlash); // This button will shake cam1 when clicked
+			var flashBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Flash", onFlash); // This button will shake cam1 when clicked
 			flashBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
-			flashBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
-			flashBtn.cameras = [cam1]; // Set it to only render on camera 1
+			//flashBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
+			flashBtn.cameras = [cam2]; // Set it to only render on camera 1
 			add(flashBtn);
 		}
 		
