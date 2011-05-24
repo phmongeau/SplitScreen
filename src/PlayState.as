@@ -100,7 +100,7 @@ package
 			FlxG.addCamera(cam2);
 
 			// add quit button
-			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onQuit); //put the button out of screen so we don't see in the two other cameras
+			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onFade); //put the button out of screen so we don't see in the two other cameras
 			add(quitBtn);
 			
 			// Create a camera focused on the button
@@ -114,6 +114,12 @@ package
 			//shakeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
 			shakeBtn.cameras = [cam1]; // Set it to only render on camera 1
 			add(shakeBtn);
+
+			/*var fadeBtn:FlxButton = new FlxButton(110, FlxG.height-20, "Fade", onFade); // This button will shake cam1 when clicked
+			fadeBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
+			//fadeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
+			fadeBtn.cameras = [cam2]; // Set it to only render on camera 1
+			add(fadeBtn);*/
 
 			var flashBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Flash", onFlash); // This button will shake cam1 when clicked
 			flashBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
@@ -168,6 +174,13 @@ package
 		{
 			//Shake cam1
 			cam2.flash();
+		}
+
+		private function onFade():void
+		{
+			//Shake cam1
+			cam2.fade(0xff000000, 1, onQuit);
+			cam1.fade(0xff000000, 1);
 		}
 	}
 }
