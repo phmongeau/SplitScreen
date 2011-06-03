@@ -99,11 +99,11 @@ package
 			cam2.color = 0xCCCCFF; // Add a light blue tint to the camera
 			FlxG.addCamera(cam2);
 
-			// add quit button
-			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onFade); //put the button out of screen so we don't see in the two other cameras
+			//add the quit button out of screen so we don't see in the two other cameras
+			var quitBtn:FlxButton = new FlxButton(1000, 1000, "Quit", onFade);
 			add(quitBtn);
 			
-			// Create a camera focused on the button
+			// Create a camera focused on the quit button
 			var cam:FlxCamera = new FlxCamera(2, 2, quitBtn.width, quitBtn.height);
 			cam.follow(quitBtn);
 			FlxG.addCamera(cam);
@@ -111,45 +111,41 @@ package
 			// Effects
 			var shakeBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Shake", onShake); // This button will shake cam1 when clicked
 			shakeBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
-			//shakeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
 			shakeBtn.cameras = [cam1]; // Set it to only render on camera 1
 			add(shakeBtn);
 
-			/*var fadeBtn:FlxButton = new FlxButton(110, FlxG.height-20, "Fade", onFade); // This button will shake cam1 when clicked
-			fadeBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
-			//fadeBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
-			fadeBtn.cameras = [cam2]; // Set it to only render on camera 1
-			add(fadeBtn);*/
-
 			var flashBtn:FlxButton = new FlxButton(10, FlxG.height-20, "Flash", onFlash); // This button will shake cam1 when clicked
 			flashBtn.scrollFactor = new FlxPoint(); //set the scrollFactor to 0,0
-			//flashBtn.label.scrollFactor = new FlxPoint(); //whe have to do the same thing for the text of the button
 			flashBtn.cameras = [cam2]; // Set it to only render on camera 1
 			add(flashBtn);
 		}
 		
 		override public function update():void
 		{
-			// collide everything
+			//collide everything
 			FlxG.collide();
 
-			//player 1 controls
+			//reset acceleration for both player to avoid slipping around.
 			player1.acceleration.x = 0;
+			player2.acceleration.x = 0;
 
+			//player 1 will move with the arrow keys
 			if(FlxG.keys.LEFT)
 				player1.acceleration.x = -player1.maxVelocity.x*4;
+
 			if(FlxG.keys.RIGHT)
 				player1.acceleration.x = player1.maxVelocity.x*4;
+
 			if(FlxG.keys.justPressed("UP") && player1.isTouching(FlxObject.FLOOR))
 				player1.velocity.y -= player1.maxVelocity.y/1.5;
 
-			//player 2 controls
-			player2.acceleration.x = 0;
-
+			//player 2 uses the wasd keys.
 			if(FlxG.keys.A)
 				player2.acceleration.x = -player2.maxVelocity.x*4;
+
 			if(FlxG.keys.D)
 				player2.acceleration.x = player2.maxVelocity.x*4;
+
 			if(FlxG.keys.justPressed("W") && player2.isTouching(FlxObject.FLOOR))
 				player2.velocity.y -= player2.maxVelocity.y/1.5;
 
@@ -157,7 +153,6 @@ package
 			
 		}
 
-		// function called when the quit button is pressed
 		private function onQuit():void
 		{
 			// Go back to the MenuState
@@ -166,20 +161,21 @@ package
 
 		private function onShake():void
 		{
-			//Shake cam1
+			//Shake cam1 with default color and duration
 			cam1.shake();
 		}
 
 		private function onFlash():void
 		{
-			//Shake cam1
+			//Flash cam2 with default color and duration
 			cam2.flash();
 		}
 
+		// function called when the quit button is pressed
 		private function onFade():void
 		{
-			//Shake cam1
-			cam2.fade(0xff000000, 1, onQuit);
+			// Fade Both cam to black
+			cam2.fade(0xff000000, 1, onQuit); // When the fade is finished, it will call onQuit
 			cam1.fade(0xff000000, 1);
 		}
 	}
